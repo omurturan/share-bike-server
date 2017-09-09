@@ -18,7 +18,7 @@
     created() {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA0TVr8uXfy-QZOiBXA1rv7Mpzq798YLFU&libraries=drawing';
+      script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyA0TVr8uXfy-QZOiBXA1rv7Mpzq798YLFU&libraries=drawing';
       script.onload = this.initMap;
       document.body.appendChild(script);
     },
@@ -54,7 +54,7 @@
             polygon.data = {id: dropOff._id};
 
             google.maps.event.addListener(polygon, "click", function () {
-              that.selectedDropOff = polygon
+              that.selectedDropOff = this
             });
 
             google.maps.event.addListener(polygon, "dragend", function () {
