@@ -19,7 +19,7 @@ app.post('/drop-off', function (req, res) {
     console.log(req.body);
     console.log(req.body.coordinates);
 
-    // TODO sanity check & try/catch probably
+    // TODO sanity check & try/catch probably. JSON.parse is dangerous
     var coordinates = JSON.parse(req.body.coordinates);
     var name = req.body.name;
 
@@ -39,11 +39,20 @@ app.post('/drop-off', function (req, res) {
 });
 
 app.put('/drop-off/:id', function (req, res) {
-    res.end();
+    // new: true => means that it will return the modified object instead of the original
+    // TODO Sanity checks on req.body. Do not trust client.
+    DropOff.findOneAndUpdate({
+        _id: req.params.id
+    }, req.body, {
+        new: true
+    }, function(err, dropOff) {
+        if (err)
+            res.send(err);
+        res.json(dropOff);
+    });
 });
 
 app.delete('/drop-off/:id', function (req, res) {
-    
     // Maybe we should do a soft-delete
     DropOff.remove({
         _id: req.params.id
@@ -73,5 +82,5 @@ app.post('/end-reservation', function () {
 
 
 http.createServer(app).listen(8081, function () {
-   console.log('be app started at 8081')
+   console.log('server app started at 8081');
 });
