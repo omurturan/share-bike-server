@@ -1,6 +1,10 @@
 <template>
   <div class="pushable">
-    <div><button  v-on:click="deleteSelectedDropOff"  v-if="selectedDropOff" class="ui negative basic button">Delete Drop-Off</button></div>
+    <div>
+      <button v-on:click="deleteSelectedDropOff" v-if="selectedDropOff" class="ui negative basic button">
+        Delete Drop-Off
+      </button>
+    </div>
     <div id="map" class="pusher"></div>
   </div>
 </template>
@@ -32,7 +36,7 @@
       },
       drawDropOffs: function () {
         var that = this;
-        request.create().get('/drop-off').then(function(response) {
+        request.create().get('/drop-off').then(function (response) {
           for (var i = 0; i < response.data.length; i++) {
             var dropOff = response.data[i];
 
@@ -46,9 +50,9 @@
             });
 
 
-            polygon.data = { id: dropOff._id };
+            polygon.data = {id: dropOff._id};
 
-            google.maps.event.addListener(polygon,"click",function(){
+            google.maps.event.addListener(polygon, "click", function () {
               that.selectedDropOff = polygon
             });
 
