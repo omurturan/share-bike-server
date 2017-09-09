@@ -1,9 +1,13 @@
 <template>
-  <div id="map" class="pusher"></div>
+  <div class="pushable">
+    <div><button  v-on:click="deleteSelectedDropOff"  v-if="selectedDropOff" class="ui negative basic button">Delete Drop-Off</button></div>
+    <div id="map" class="pusher"></div>
+  </div>
 </template>
 <script>
   import locationHelper from '@/helpers/location'
   import request from '@/helpers/request'
+  import styleHelper from '@/helpers/style'
 
   export default {
     name: 'gmap',
@@ -16,20 +20,41 @@
     },
     data() {
       return {
-        map: null
+        map: null,
+        selectedDropOff: null
       }
     },
     methods: {
+      deleteSelectedDropOff: function () {
+        request.create().delete('/drop-off/' + this.selectedDropOff.data.id);
+        this.selectedDropOff.setMap(null);
+        this.selectedDropOff = null;
       },
-      addMarker: function (position) {
-        new google.maps.Marker({
-          position: position,
-          map: this.map,
-          title: 'Hello World!'
+      drawDropOffs: function () {
+        var that = this;
+        request.create().get('/drop-off').then(function(response) {
+          for (var i = 0; i < response.data.length; i++) {
+            var dropOff = response.data[i];
+
+            var polygon = new google.maps.Polygon({
+              paths: dropOff.coordinates,
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+            });
+
+
+            polygon.data = { id: dropOff._id };
+
+            google.maps.event.addListener(polygon,"click",function(){
+              that.selectedDropOff = polygon
+            });
+
+            polygon.setMap(that.map);
+          }
         });
-      },
-      getDefaultPosition: function (cb) {
-        return locationHelper.getClientLocation(cb);
       },
       initMap: function () {
         var that = this;
@@ -37,17 +62,19 @@
           zoom: 8,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           center: locationHelper.getDefaultLocation(),
-          styles: that.getStyles()
+          styles: styleHelper.getMapStyle()
+        });
+
+        that.map.addListener('click', function () {
+          that.selectedDropOff = null;
         });
 
         var drawingManager = new google.maps.drawing.DrawingManager({
-          drawingMode: google.maps.drawing.OverlayType.POLYGON,
           drawingControl: true,
           drawingControlOptions: {
             position: google.maps.ControlPosition.TOP_CENTER,
             drawingModes: ['polygon']
           },
-          markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
           circleOptions: {
             fillColor: '#ffff00',
             fillOpacity: 1,
@@ -66,6 +93,7 @@
             // Repeat the first point for the polygon to be complete.
             arr.push(arr[0]);
 
+            that.selectedDropOff = null;
             request.create().post('/drop-off', {
               'name': 'test',
               'coordinates': arr
@@ -73,10 +101,12 @@
           }
         });
 
-        this.getDefaultPosition(function (position) {
-//          that.map.setCenter(position);
-//          that.addMarker(position);
-        })
+
+        locationHelper.getClientLocation(function (position) {
+          that.map.setCenter(position);
+        });
+
+        this.drawDropOffs();
       }
     }
   }
