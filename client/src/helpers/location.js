@@ -1,7 +1,7 @@
 export default {
   getClientLocation(callback) {
     const geoSuccess = position => {
-      callback({ lat: position.coords.latitude, lng: position.coords.longitude });
+      callback({lat: position.coords.latitude, lng: position.coords.longitude});
     };
 
     const geoError = () => {

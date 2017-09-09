@@ -181,12 +181,9 @@
             // Repeat the first point for the polygon to be complete.
             arr.push(arr[0]);
 
-
-            request.getInstance().post('/drop-off', {
-              data: {
-                'name': 'test',
-                'coordinates': arr
-              }
+            request.create().post('/drop-off', {
+              'name': 'test',
+              'coordinates': arr
             })
           }
         });

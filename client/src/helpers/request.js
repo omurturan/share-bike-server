@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default {
-  getInstance: function () {
+  create: function () {
     return new axios.create({
       baseURL: 'http://localhost:8081'
     })
