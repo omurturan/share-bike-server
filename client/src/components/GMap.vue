@@ -47,6 +47,7 @@
               strokeWeight: 2,
               fillColor: '#FF0000',
               fillOpacity: 0.35,
+              draggable: true
             });
 
 
@@ -54,6 +55,22 @@
 
             google.maps.event.addListener(polygon, "click", function () {
               that.selectedDropOff = polygon
+            });
+
+            google.maps.event.addListener(polygon, "dragend", function () {
+              var path = this.getPath()
+              var coordinates = [];
+
+              for (var i = 0 ; i < path.length ; i++) {
+                coordinates.push({
+                  lat: path.getAt(i).lat(),
+                  lng: path.getAt(i).lng()
+                });
+              }
+
+              request.create().put('/drop-off/' +  polygon.data.id, {
+                coordinates: coordinates
+              });
             });
 
             polygon.setMap(that.map);
