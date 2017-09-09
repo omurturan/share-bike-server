@@ -1,7 +1,8 @@
 <template>
   <div class="index-page">
-    <div class="ui visible inverted left vertical sidebar menu">sol</div>
-    <div class="map-container"><GMap></GMap></div>
+    <div class="map-container">
+      <GMap></GMap>
+    </div>
   </div>
 </template>
 
@@ -18,7 +19,7 @@
 <style scoped>
   .map-container {
     position: absolute;
-    left: 260px;
+    left: 0px;
     top: 0;
     bottom: 0;
     right: 0;
