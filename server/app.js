@@ -77,8 +77,29 @@ app.get('/drop-off', function (req, res) {
     });
 });
 
-app.post('/end-reservation', function () {
-    res.end();
+app.post('/end-reservation', function (req, res) {
+    var lng = req.body.lng;
+    var lat = req.body.lat;
+    // Coordinates of Ankara for testing purposes
+    lng = 39.812703;
+    lat = 31.896619;
+    var geojsonPoint = { type: 'Point', coordinates: [lng, lat] };
+    DropOff.find({
+        loc: {
+            $geoIntersects: {
+                $geometry: geojsonPoint
+            }
+        }
+    }, function(err, list) {
+        if(err) {
+            console.log(err);
+            res.send(err);
+            return;
+        }
+        console.log(list);
+        res.json(list);
+    });
+
 });
 
 
