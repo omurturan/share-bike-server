@@ -28,9 +28,7 @@ app.post('/drop-off', function (req, res) {
         coordinates: coordinates
     }, function (err, awesome_instance) {
         if (err) {
-            console.log(err);
-            return;
-            // return handleError(err);
+            res.send(err);
         }
         // saved!
         console.log('saved');

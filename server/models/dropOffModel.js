@@ -10,8 +10,14 @@ var DropOffSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    coordinates: [
-        { langitude: Number, longitude: Number }]
+    coordinates: {
+        type: [{latitude: Number, longitude: Number}],
+        validate: [coordinatesArrayLimit, "{PATH} should have more than 3 points"]
+    }
 });
+
+function coordinatesArrayLimit(val) {
+    return val.length > 2;
+}
 
 module.exports = mongoose.model('DropOff', DropOffSchema);
