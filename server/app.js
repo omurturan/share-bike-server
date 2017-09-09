@@ -23,7 +23,10 @@ app.post('/drop-off', function (req, res) {
     var coordinates = JSON.parse(req.body.coordinates);
     var name = req.body.name;
 
-    DropOff.create({ name: name, coordinates: coordinates }, function (err, awesome_instance) {
+    DropOff.create({
+        name: name,
+        coordinates: coordinates
+    }, function (err, awesome_instance) {
         if (err) {
             console.log(err);
             return;
@@ -39,11 +42,23 @@ app.put('/drop-off/:id', function (req, res) {
     res.end();
 });
 
-app.delete('drop-off/:id', function (req, res) {
-    res.end();
+app.delete('/drop-off/:id', function (req, res) {
+    
+    // Maybe we should do a soft-delete
+    DropOff.remove({
+        _id: req.params.id
+    }, function(err, dropOff) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
+        res.json({ message: 'Drop-off zone successfully deleted' });
+    });
 });
 
 app.get('/drop-off', function (req, res) {
+    // we return all drop-offs without any restriction
+    // it is probably a good idea to sort at least.
     DropOff.find({}, function(err, dropOffs) {
         if (err) {
             res.send(err);
