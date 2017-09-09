@@ -8,6 +8,7 @@ var cors = require('cors');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(cors());
 // TODO Check CORS policy
 app.options('*', cors());
@@ -20,11 +21,8 @@ app.get('/', function (req, res) {
 });
 
 app.post('/drop-off', function (req, res) {
-    console.log(req.body);
-    console.log(req.body.coordinates);
-
     // TODO sanity check & try/catch probably. JSON.parse is dangerous
-    var coordinates = JSON.parse(req.body.coordinates);
+    var coordinates = req.body.coordinates;
     var name = req.body.name;
 
     DropOff.create({
