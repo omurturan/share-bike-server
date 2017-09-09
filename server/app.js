@@ -4,9 +4,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var DropOff = require('./models/dropOffModel');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors());
+// TODO Check CORS policy
+app.options('*', cors());
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/share-bike');

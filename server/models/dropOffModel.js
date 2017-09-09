@@ -6,7 +6,7 @@ var DropOffSchema = new Schema({
         type: String,
         required: 'Kindly enter the name of the drop-off zone'
     },
-    Created_date: {
+    created_date: {
         type: Date,
         default: Date.now
     },
