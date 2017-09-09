@@ -26,14 +26,15 @@ app.post('/drop-off', function (req, res) {
     var name = req.body.name;
 
     DropOff.create({
+        type: "Polygon",
         name: name,
         coordinates: coordinates
     }, function (err, awesome_instance) {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
+            return;
         }
         // saved!
-        console.log('saved');
         res.json(awesome_instance);
     });
 });
