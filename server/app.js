@@ -18,6 +18,8 @@ app.get('/', function (req, res) {
 app.post('/drop-off', function (req, res) {
     console.log(req.body);
     console.log(req.body.coordinates);
+
+    // TODO sanity check & try/catch probably
     var coordinates = JSON.parse(req.body.coordinates);
     var name = req.body.name;
 
@@ -29,7 +31,7 @@ app.post('/drop-off', function (req, res) {
         }
         // saved!
         console.log('saved');
-        res.end(JSON.stringify(awesome_instance));
+        res.json(awesome_instance);
     });
 });
 
@@ -42,7 +44,12 @@ app.delete('drop-off/:id', function (req, res) {
 });
 
 app.get('/drop-off', function (req, res) {
-    res.end();
+    DropOff.find({}, function(err, dropOffs) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(dropOffs);
+    });
 });
 
 app.post('/end-reservation', function () {
