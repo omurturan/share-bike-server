@@ -73,6 +73,7 @@ app.get('/drop-off', function (req, res) {
     DropOff.find({}, function(err, dropOffs) {
         if (err) {
             res.send(err);
+            return;
         }
         res.json(dropOffs);
     });

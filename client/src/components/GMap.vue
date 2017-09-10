@@ -15,14 +15,15 @@
 
   export default {
     name: 'gmap',
-    created() {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyA0TVr8uXfy-QZOiBXA1rv7Mpzq798YLFU&libraries=drawing';
-      script.onload = this.initMap;
-      document.body.appendChild(script);
+    created () {
+      var script = document.createElement('script')
+      script.type = 'text/javascript'
+      // TODO get the API key from ENV variables
+      script.src = '//maps.googleapis.com/maps/api/js?key=AIzaSyA0TVr8uXfy-QZOiBXA1rv7Mpzq798YLFU&libraries=drawing'
+      script.onload = this.initMap
+      document.body.appendChild(script)
     },
-    data() {
+    data () {
       return {
         map: null,
         selectedDropOff: null
@@ -30,15 +31,15 @@
     },
     methods: {
       deleteSelectedDropOff: function () {
-        request.create().delete('/drop-off/' + this.selectedDropOff.data.id);
-        this.selectedDropOff.setMap(null);
-        this.selectedDropOff = null;
+        request.create().delete('/drop-off/' + this.selectedDropOff.data.id)
+        this.selectedDropOff.setMap(null)
+        this.selectedDropOff = null
       },
       drawDropOffs: function () {
-        var that = this;
+        var that = this
         request.create().get('/drop-off').then(function (response) {
           for (var i = 0; i < response.data.length; i++) {
-            var dropOff = response.data[i];
+            var dropOff = response.data[i]
 
             var polygon = new google.maps.Polygon({
               paths: dropOff.coordinates,
@@ -48,47 +49,46 @@
               fillColor: '#FF0000',
               fillOpacity: 0.35,
               draggable: true
-            });
+            })
 
+            polygon.data = {id: dropOff._id}
 
-            polygon.data = {id: dropOff._id};
-
-            google.maps.event.addListener(polygon, "click", function () {
+            google.maps.event.addListener(polygon, 'click', function () {
               that.selectedDropOff = this
-            });
+            })
 
-            google.maps.event.addListener(polygon, "dragend", function () {
+            google.maps.event.addListener(polygon, 'dragend', function () {
               var path = this.getPath()
-              var coordinates = [];
+              var coordinates = []
 
-              for (var i = 0 ; i < path.length ; i++) {
+              for (var i = 0; i < path.length; i++) {
                 coordinates.push({
                   lat: path.getAt(i).lat(),
                   lng: path.getAt(i).lng()
-                });
+                })
               }
 
-              request.create().put('/drop-off/' +  polygon.data.id, {
+              request.create().put('/drop-off/' + polygon.data.id, {
                 coordinates: coordinates
-              });
-            });
+              })
+            })
 
-            polygon.setMap(that.map);
+            polygon.setMap(that.map)
           }
-        });
+        })
       },
       initMap: function () {
-        var that = this;
+        var that = this
         that.map = new google.maps.Map(document.getElementById('map'), {
           zoom: 8,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           center: locationHelper.getDefaultLocation(),
           styles: styleHelper.getMapStyle()
-        });
+        })
 
         that.map.addListener('click', function () {
-          that.selectedDropOff = null;
-        });
+          that.selectedDropOff = null
+        })
 
         var drawingManager = new google.maps.drawing.DrawingManager({
           drawingControl: true,
@@ -104,30 +104,29 @@
             editable: true,
             zIndex: 1
           }
-        });
-        drawingManager.setMap(that.map);
+        })
+        drawingManager.setMap(that.map)
 
         google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
           if (event.type === 'polygon') {
-            var arr = event.overlay.getPath().getArray();
+            var arr = event.overlay.getPath().getArray()
 
             // Repeat the first point for the polygon to be complete.
-            arr.push(arr[0]);
+            arr.push(arr[0])
 
-            that.selectedDropOff = null;
+            that.selectedDropOff = null
             request.create().post('/drop-off', {
               'name': 'test',
               'coordinates': arr
             })
           }
-        });
-
+        })
 
         locationHelper.getClientLocation(function (position) {
-          that.map.setCenter(position);
-        });
+          that.map.setCenter(position)
+        })
 
-        this.drawDropOffs();
+        this.drawDropOffs()
       }
     }
   }

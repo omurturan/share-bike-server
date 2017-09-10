@@ -80,5 +80,5 @@ export default {
         stylers: [{color: '#17263c'}]
       }
     ]
-  },
+  }
 }

@@ -1,16 +1,16 @@
 export default {
-  getClientLocation(callback) {
+  getClientLocation (callback) {
     const geoSuccess = position => {
-      callback({lat: position.coords.latitude, lng: position.coords.longitude});
-    };
+      callback({lat: position.coords.latitude, lng: position.coords.longitude})
+    }
 
     const geoError = () => {
-      callback(this.getDefaultLocation());
-    };
+      callback(this.getDefaultLocation())
+    }
 
-    navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError)
   },
   getDefaultLocation: function () {
-    return {lat: 52.520008, lng: 13.404954};
+    return {lat: 52.520008, lng: 13.404954}
   }
 }
