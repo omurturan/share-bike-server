@@ -1,9 +1,7 @@
 <template>
   <div class="pushable">
-    <div>
-      <button v-on:click="deleteSelectedDropOff" v-if="selectedDropOff" class="ui negative basic button">
-        Delete Drop-Off
-      </button>
+    <div v-if="selectedDropOff" class="delete-button-container">
+      <i v-on:click="deleteSelectedDropOff"  class="trash icon"></i>
     </div>
     <div id="map" class="pusher"></div>
   </div>
@@ -138,5 +136,19 @@
   #map {
     height: 100%;
     width: 100%;
+  }
+
+  .delete-button-container {
+    height: 24px;
+    width: 24px;
+    background: #fff;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    bottom: 5px;
+    padding: 2px 4px;
+    right: 0;
+    margin: 0 auto;
   }
 </style>
