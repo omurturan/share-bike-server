@@ -41,6 +41,7 @@
           for (var i = 0; i < response.data.length; i++) {
             var dropOff = response.data[i]
 
+            /* eslint-disable no-undef */
             var polygon = new google.maps.Polygon({
               paths: dropOff.coordinates,
               strokeColor: '#FF0000',
