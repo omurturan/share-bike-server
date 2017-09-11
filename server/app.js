@@ -21,6 +21,16 @@ app.get('/', function (req, res) {
    res.end('hello from /')
 });
 
+// An example curl request to create a drop-off zone
+//
+// curl 'http://localhost:8081/drop-off' \
+//         -H 'Origin: http://localhost:8080' \
+//         -H 'Accept-Encoding: gzip, deflate, br' \
+//         -H 'Accept-Language: tr-TR,tr;q=0.8,en-US;q=0.6,en;q=0.4' \
+//         -H 'Content-Type: application/json;charset=UTF-8' \
+//         -H 'Accept: application/json, text/plain, */*' \
+//         -H 'Referer: http://localhost:8080/' \
+//         -H 'DNT: 1' --data-binary '{"name":"test","coordinates":[{"lat":40.245991504199026,"lng":28.2568359375},{"lat":38.272688535980976,"lng":28.2568359375},{"lat":38.61687046392973,"lng":37.529296875},{"lat":41.60722821271717,"lng":36.650390625},{"lat":40.245991504199026,"lng":28.2568359375}]}' --compressed
 app.post('/drop-off', function (req, res) {
     // TODO sanity check & try/catch probably. JSON.parse is dangerous
     var coordinates = req.body.coordinates;
@@ -79,6 +89,16 @@ app.get('/drop-off', function (req, res) {
     });
 });
 
+// An example curl request to check if you can drop your bike
+//
+// curl 'http://localhost:8081/end-reservation' \
+//         -H 'Origin: http://localhost:8080' \
+//         -H 'Accept-Encoding: gzip, deflate, br' \
+//         -H 'Accept-Language: tr-TR,tr;q=0.8,en-US;q=0.6,en;q=0.4' \
+//         -H 'Content-Type: application/json;charset=UTF-8' \
+//         -H 'Accept: application/json, text/plain, */*' \
+//         -H 'Referer: http://localhost:8080/' \
+//         -H 'DNT: 1' --data-binary '{"lng":32.859742, "lat":39.933363 }' --compressed
 app.post('/end-reservation', function (req, res) {
     var lng = req.body.lng;
     var lat = req.body.lat;
